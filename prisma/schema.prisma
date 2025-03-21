@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  name          String
+  firstname     String
+  email         String          @unique
+  password      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Groupe        Groupe[]
+  GroupeMembers GroupeMembers[]
+  Invitation    Invitation[]
+}
+
+model Groupe {
+  id            Int             @id @default(autoincrement())
+  name          String
+  description   String
+  createdById   Int
+  createdBy     User            @relation(fields: [createdById], references: [id]) // Relation to User model
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  GroupeMembers GroupeMembers[]
+  Invitation    Invitation[]
+}
+
+model GroupeMembers {
+  id        Int      @id @default(autoincrement())
+  groupeId  Int
+  groupes   Groupe   @relation(fields: [groupeId], references: [id]) // Relation to Groupe model
+  userId    Int
+  users     User     @relation(fields: [userId], references: [id]) // Relation to User model
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invitation {
+  id          Int      @id @default(autoincrement())
+  email       String
+  groupeId    Int
+  groupe      Groupe   @relation(fields: [groupeId], references: [id])
+  invitedById Int
+  invitedBy   User     @relation(fields: [invitedById], references: [id])
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
