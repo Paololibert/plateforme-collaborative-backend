@@ -132,3 +132,55 @@ npm run prisma:reset
 - Passwords are hashed with bcrypt
 - Invitations are managed via email
 - JWT tokens are stored in cookies
+
+## Deployment on Vercel
+
+1. Install Vercel CLI:
+
+```bash
+npm i -g vercel
+```
+
+2. Configure environment variables in Vercel dashboard:
+
+   - DATABASE_URL
+   - JWT_SECRET
+   - EMAIL_HOST
+   - EMAIL_PORT
+   - EMAIL_USER
+   - EMAIL_PASS
+   - SITE_URL
+
+3. Deploy:
+
+```bash
+vercel
+```
+
+4. For production deployment:
+
+```bash
+vercel --prod
+```
+
+## PostgreSQL Configuration
+
+1. Update your DATABASE_URL in .env:
+
+```bash
+DATABASE_URL="postgresql://user:password@localhost:5432/your_database"
+```
+
+2. For production with Vercel, use a PostgreSQL provider like:
+
+- Vercel Postgres
+- Supabase
+- Railway
+- Neon
+
+3. Run migrations:
+
+```bash
+npx prisma migrate reset
+npx prisma migrate deploy
+```

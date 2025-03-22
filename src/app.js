@@ -9,7 +9,10 @@ const dashboardRoutes = require('./routes/dashboardRoutes'); // Import dashboard
 
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:3000', // from my frontend
+  origin: [
+    'http://localhost:3000',
+    'https://your-frontend-domain.vercel.app' // Ajoutez votre domaine Vercel frontend
+  ],
   credentials: true,
 }));
 app.use(cookieParser());
