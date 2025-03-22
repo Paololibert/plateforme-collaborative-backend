@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get('/', verifyToken, userController.getAllUsers);
 router.post('/register', userController.register);
+router.put('/update', verifyToken, userController.updateUser);
 
 module.exports = router;

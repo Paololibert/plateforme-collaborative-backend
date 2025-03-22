@@ -34,8 +34,46 @@ exports.register = async (data) => {
     return await prisma.user.create({ data });
   } catch (error) {
     if (error.message.includes("User already exists")) {
-      throw new Error("Cet email est déjà utilisé.");
+      throw new Error("This email is already in use.");
     }
-    throw new Error("Erreur lors de la création de l'utilisateur: " + error.message);
+    throw new Error("Error while creating user: " + error.message);
+  }
+};
+
+exports.updateUser = async (userId, data) => {
+  try {
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 12);
+
+    }
+
+    // Update user
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(userId) },
+      data: {
+        name: data.name || user.name,
+        firstname: data.firstname || user.firstname,
+        email: data.email || user.email,
+        password: data.password || user.password,
+      },
+      select: {
+        id: true,
+        name: true,
+        firstname: true,
+        email: true,
+      }
+    });
+
+    return updatedUser;
+  } catch (error) {
+    throw new Error("Error updating user: " + error.message);
   }
 };
