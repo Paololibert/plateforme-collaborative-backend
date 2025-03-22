@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npx prisma generate && npx prisma migrate deploy && npm run build",
+  "buildCommand": "cd .. && npx prisma generate && npx prisma migrate deploy && npm run build",
   "builds": [
     {
       "src": "src/index.js",
@@ -13,5 +13,8 @@
       "dest": "src/index.js"
     }
   ],
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "env": {
+    "PRISMA_SCHEMA_PATH": "./backend/prisma/schema.prisma"
+  }
 }
