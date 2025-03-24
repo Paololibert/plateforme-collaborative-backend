@@ -11,7 +11,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://your-frontend-domain.vercel.app' // Ajoutez votre domaine Vercel frontend
+    'https://your-frontend-domain.vercel.app'
   ],
   credentials: true,
 }));
@@ -20,7 +20,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupeRoutes);
-app.use('/api/invitations', invitationRoutes); // Assurez-vous que cette ligne est présente
-app.use('/api/dashboard', dashboardRoutes); // Cette route doit être présente
+app.use('/api/invitations', invitationRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 module.exports = app;
