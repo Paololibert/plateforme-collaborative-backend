@@ -7,16 +7,16 @@ const mailjet = new Mailjet({
 
 exports.sendMail = async ({ to, subject, html }) => {
   try {
-    await mailjet.post("send", { version: 'v3.1' }).request({
+    const request = await mailjet.post('send', { version: 'v3.1' }).request({
       Messages: [
         {
           From: {
-            Email: process.env.MAILJET_SENDER_EMAIL,
-            Name: process.env.MAILJET_SENDER_NAME
+            Email: "libertsinzo7@gmail.com", 
+            Name: "Platform Collaborative",
           },
           To: [
             {
-              Email: to,
+              Email: to
             }
           ],
           Subject: subject,
@@ -24,6 +24,7 @@ exports.sendMail = async ({ to, subject, html }) => {
         }
       ]
     });
+    return request.body;
   } catch (error) {
     console.error('Error sending email:', error);
     throw new Error('Failed to send email');

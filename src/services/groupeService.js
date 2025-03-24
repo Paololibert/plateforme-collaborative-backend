@@ -228,8 +228,11 @@ exports.inviteToGroup = async (groupId, userId, email) => {
   await sendMail({
     to: email,
     subject: 'Group Invitation',
-    html: `<p>You have been invited to join the group: ${group.name}</p>
-           <p><a href="${acceptUrl}">Click here to accept the invitation</a></p>`
+    html: `
+      <h3>Group Invitation</h3>
+      <p>You have been invited to join the group: ${group.name}</p>
+      <p><a href="${acceptUrl}">Click here to accept the invitation</a></p>
+    `
   });
 };
 
@@ -329,6 +332,7 @@ exports.validateInvitation = async (invitationId, userId) => {
       to: invitation.email,
       subject: 'Welcome to the Platform',
       html: `
+        <h3>Welcome to Platform Collaborative!</h3>
         <p>Your account has been created successfully!</p>
         <p>Here are your login credentials:</p>
         <p>Email: ${invitation.email}</p>
