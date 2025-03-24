@@ -1,6 +1,7 @@
 const prisma = require("../utils/prisma");
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
+const { sendMail } = require('../utils/mailjet');
 
 exports.getAllGroupes = async () => {
   try {
@@ -224,15 +225,12 @@ exports.inviteToGroup = async (groupId, userId, email) => {
 
   const acceptUrl = `${process.env.SITE_URL}/api/invitations/accept/${invitation.id}`;
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
+  await sendMail({
     to: email,
     subject: 'Group Invitation',
     html: `<p>You have been invited to join the group: ${group.name}</p>
            <p><a href="${acceptUrl}">Click here to accept the invitation</a></p>`
-  };
-
-  await transporter.sendMail(mailOptions);
+  });
 };
 
 exports.deleteGroup = async (groupId, userId) => {
@@ -327,8 +325,7 @@ exports.validateInvitation = async (invitationId, userId) => {
 
     const loginUrl = `${process.env.SITE_URL}/login`;
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    await sendMail({
       to: invitation.email,
       subject: 'Welcome to the Platform',
       html: `
@@ -339,9 +336,7 @@ exports.validateInvitation = async (invitationId, userId) => {
         <p><a href="${loginUrl}">Click here to login</a></p>
         <p>Please change your password after your first login.</p>
       `
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
   }
 
   // Add user to group
