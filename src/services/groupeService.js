@@ -191,36 +191,52 @@ exports.getUserGroups = async (userId) => {
 };
 
 exports.inviteToGroup = async (groupId, userId, email) => {
-  const group = await prisma.groupe.findUnique({
-    where: { id: groupId },
-    include: { createdBy: true }
+  // 1. Vérifier si le groupe existe et appartient à l'utilisateur
+  const group = await prisma.groupe.findFirst({
+    where: {
+      id: groupId,
+      createdById: userId
+    }
   });
 
   if (!group) {
-    throw new Error("Group not found");
+    throw new Error("Group not found or you're not the owner");
   }
 
-  if (group.createdById !== userId) {
-    throw new Error("Only the group creator can send invitations");
+  // 2. Vérifier si une invitation existe déjà pour cet email dans ce groupe
+  const existingInvitation = await prisma.invitation.findFirst({
+    where: {
+      email: email,
+      groupeId: groupId,
+      status: {
+        in: ['pending', 'accepted', 'validated']
+      }
+    }
+  });
+
+  if (existingInvitation) {
+    // 3. Si invitation existe, vérifier si l'utilisateur est déjà membre
+    const member = await prisma.groupeMembers.findFirst({
+      where: {
+        groupeId: groupId,
+        users: {
+          email: email
+        }
+      }
+    });
+
+    if (member) {
+      throw new Error("This user is already a member of the group");
+    }
   }
 
-  // Create invitation record
+  // 4. Si pas d'invitation ou utilisateur non membre, créer l'invitation
   const invitation = await prisma.invitation.create({
     data: {
       email,
       groupeId: groupId,
       invitedById: userId,
     },
-  });
-
-  // Send email invitation using Mailtrap
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
   });
 
   const acceptUrl = `${process.env.SITE_URL}/api/invitations/accept/${invitation.id}`;
@@ -326,7 +342,7 @@ exports.validateInvitation = async (invitationId, userId) => {
       }
     });
 
-    const loginUrl = `${process.env.SITE_URL}/login`;
+    const loginUrl = `http://localhost:3000/login`;
 
     await sendMail({
       to: invitation.email,
