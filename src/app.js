@@ -11,7 +11,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://your-frontend-domain.vercel.app'
+    'https://plateforme-collaborative-newfront.vercel.app/'
   ],
   credentials: true,
 }));

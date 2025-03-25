@@ -6,7 +6,7 @@ exports.acceptInvitation = async (req, res) => {
 
   try {
     const response = await invitationService.acceptInvitation(invitationId);
-    res.status(200).json(response);
+    res.redirect(response.redirectUrl);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -25,7 +25,7 @@ exports.validateInvitation = async (req, res) => {
 };
 
 exports.getSentInvitations = async (req, res) => {
-  try { 
+  try {
     const userId = parseInt(req.user.userId);
     const invitations = await invitationService.getSentInvitations(userId);
     res.status(200).json(invitations);

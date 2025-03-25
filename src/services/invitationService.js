@@ -14,15 +14,16 @@ exports.acceptInvitation = async (invitationId) => {
     throw new Error("Invitation already processed");
   }
 
-  // Update invitation status to accepted
+  // Update invitation status
   await prisma.invitation.update({
     where: { id: invitationId },
     data: { status: "accepted" }
   });
-
+  const site_login = process.env.SITE_LOGIN;
   return {
     status: "200",
-    message: "Invitation accepted"
+    message: "Invitation accepted",
+    redirectUrl: site_login
   };
 };
 

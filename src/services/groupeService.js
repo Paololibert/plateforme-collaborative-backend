@@ -191,7 +191,7 @@ exports.getUserGroups = async (userId) => {
 };
 
 exports.inviteToGroup = async (groupId, userId, email) => {
-  // 1. Vérifier si le groupe existe et appartient à l'utilisateur
+  // 1. Check if user is the owner of the group
   const group = await prisma.groupe.findFirst({
     where: {
       id: groupId,
@@ -203,7 +203,7 @@ exports.inviteToGroup = async (groupId, userId, email) => {
     throw new Error("Group not found or you're not the owner");
   }
 
-  // 2. Vérifier si une invitation existe déjà pour cet email dans ce groupe
+  // 2. Check if invitation already exists
   const existingInvitation = await prisma.invitation.findFirst({
     where: {
       email: email,
@@ -215,7 +215,7 @@ exports.inviteToGroup = async (groupId, userId, email) => {
   });
 
   if (existingInvitation) {
-    // 3. Si invitation existe, vérifier si l'utilisateur est déjà membre
+    // 3. Check if user is already a member of the group
     const member = await prisma.groupeMembers.findFirst({
       where: {
         groupeId: groupId,
@@ -230,7 +230,7 @@ exports.inviteToGroup = async (groupId, userId, email) => {
     }
   }
 
-  // 4. Si pas d'invitation ou utilisateur non membre, créer l'invitation
+  // 4. Create invitation
   const invitation = await prisma.invitation.create({
     data: {
       email,
@@ -342,7 +342,7 @@ exports.validateInvitation = async (invitationId, userId) => {
       }
     });
 
-    const loginUrl = `http://localhost:3000/login`;
+    const loginUrl = `${process.env.SITE_URL}/login`;
 
     await sendMail({
       to: invitation.email,
