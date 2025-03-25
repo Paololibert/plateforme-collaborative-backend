@@ -11,5 +11,17 @@
       "src": "/(.*)",
       "dest": "index.js"
     }
-  ]
+  ],
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "JWT_SECRET": "@jwt_secret",
+    "EMAIL_USER": "@email_user",
+    "EMAIL_PASS": "@email_pass",
+    "EMAIL_HOST": "@email_host",
+    "EMAIL_PORT": "@email_port",
+    "SITE_URL": "@site_url",
+    "SITE_LOGIN": "@site_login",
+    "MJ_APIKEY_PUBLIC": "@mj_apikey_public",
+    "MJ_APIKEY_PRIVATE": "@mj_apikey_private"
+  }
 }
