@@ -1,4 +1,4 @@
-const app = require('./app'); // Import the app configuration
+const app = require('./src/app'); // Import the app configuration
 
 const port = process.env.PORT || 3001;
 
