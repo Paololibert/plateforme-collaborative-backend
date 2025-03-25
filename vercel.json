@@ -11,8 +11,5 @@
       "src": "/(.*)",
       "dest": "src/index.js"
     }
-  ],
-  "env": {
-    "DATABASE_URL": "postgresql://collaborative_db_owner:npg_zTXBWxAkd81V@ep-lively-king-a5nkjjmg-pooler.us-east-2.aws.neon.tech/collaborative_db?sslmode=require"
-  }
+  ]
 }
